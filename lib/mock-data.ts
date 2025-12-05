@@ -1,0 +1,106 @@
+// Mock data for admin portal - Replace with real API calls later
+
+export const MOCK_USERS = [
+  { id: 1, name: "John Doe", email: "john@example.com", role: "seller", status: "active", createdAt: "2024-01-15" },
+  { id: 2, name: "Jane Smith", email: "jane@example.com", role: "buyer", status: "active", createdAt: "2024-01-18" },
+  { id: 3, name: "Bob Johnson", email: "bob@example.com", role: "admin", status: "active", createdAt: "2024-01-20" },
+  {
+    id: 4,
+    name: "Alice Brown",
+    email: "alice@example.com",
+    role: "seller",
+    status: "inactive",
+    createdAt: "2024-01-22",
+  },
+  {
+    id: 5,
+    name: "Charlie Davis",
+    email: "charlie@example.com",
+    role: "buyer",
+    status: "active",
+    createdAt: "2024-01-25",
+  },
+  {
+    id: 6,
+    name: "Diana Wilson",
+    email: "diana@example.com",
+    role: "seller",
+    status: "active",
+    createdAt: "2024-01-28",
+  },
+  { id: 7, name: "Eve Martinez", email: "eve@example.com", role: "admin", status: "active", createdAt: "2024-02-01" },
+  {
+    id: 8,
+    name: "Frank Miller",
+    email: "frank@example.com",
+    role: "buyer",
+    status: "inactive",
+    createdAt: "2024-02-05",
+  },
+]
+
+export const MOCK_PRODUCTS = [
+  {
+    id: 1,
+    name: "Laptop Pro",
+    category: "Electronics",
+    price: 999,
+    stock: 45,
+    status: "active",
+    createdAt: "2024-01-15",
+  },
+  {
+    id: 2,
+    name: "Coffee Maker",
+    category: "Appliances",
+    price: 79,
+    stock: 120,
+    status: "active",
+    createdAt: "2024-01-18",
+  },
+  {
+    id: 3,
+    name: "Office Chair",
+    category: "Furniture",
+    price: 299,
+    stock: 0,
+    status: "draft",
+    createdAt: "2024-01-20",
+  },
+  { id: 4, name: "USB Hub", category: "Electronics", price: 49, stock: 200, status: "active", createdAt: "2024-01-25" },
+  { id: 5, name: "Desk Lamp", category: "Furniture", price: 39, stock: 85, status: "active", createdAt: "2024-02-01" },
+  {
+    id: 6,
+    name: "Wireless Mouse",
+    category: "Electronics",
+    price: 29,
+    stock: 150,
+    status: "active",
+    createdAt: "2024-02-05",
+  },
+  {
+    id: 7,
+    name: "Standing Desk",
+    category: "Furniture",
+    price: 499,
+    stock: 10,
+    status: "draft",
+    createdAt: "2024-02-10",
+  },
+  {
+    id: 8,
+    name: "Webcam 4K",
+    category: "Electronics",
+    price: 149,
+    stock: 60,
+    status: "active",
+    createdAt: "2024-02-15",
+  },
+]
+
+export const DASHBOARD_METRICS = {
+  totalUsers: 2451,
+  activeUsers: 1840,
+  totalProducts: 847,
+  pendingReview: 23,
+}
