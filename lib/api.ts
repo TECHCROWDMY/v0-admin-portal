@@ -1,8 +1,8 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://backend.symspacelabs.com"
 
 export const API_ENDPOINTS = {
-  users: `${API_BASE_URL}/users`,
-  products: `${API_BASE_URL}/products`,
+  users: `${API_BASE_URL}/admin/users`,
+  products: `${API_BASE_URL}/admin/products`,
   auth: `${API_BASE_URL}/auth/login`,
 }
 
