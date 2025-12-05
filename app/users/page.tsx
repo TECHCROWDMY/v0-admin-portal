@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Pagination } from "@/components/pagination"
 import { useRouter } from "next/navigation"
 import { Search, Plus, Eye, Edit, Trash2 } from "lucide-react"
-import { API_ENDPOINTS, fetchAPI } from "@/lib/api"
+import { API_ENDPOINTS, authFetch } from "@/lib/api"
 
 interface APIUser {
   id: string
@@ -59,7 +59,7 @@ export default function UsersPage() {
     async function fetchUsers() {
       try {
         setLoading(true)
-        const response = await fetchAPI(API_ENDPOINTS.users)
+        const response = await authFetch(API_ENDPOINTS.users)
 
         // Handle both direct array and nested data structure
         const usersData = Array.isArray(response) ? response : response.data || []

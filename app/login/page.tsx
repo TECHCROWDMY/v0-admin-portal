@@ -3,15 +3,15 @@
 import type React from "react"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { AlertCircle } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { useAuth } from "@/context/auth-context"
 
 export default function LoginPage() {
-  const router = useRouter()
+  const { login, authLoading } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
@@ -29,19 +29,25 @@ export default function LoginPage() {
 
     setLoading(true)
 
-    // Simulate API call - Replace with actual API endpoint: POST /auth/login
-    setTimeout(() => {
-      if (email && password.length >= 6) {
-        // Store session/JWT (mock)
-        localStorage.setItem("admin_token", "mock_jwt_token_" + Date.now())
-        localStorage.setItem("admin_email", email)
-        setLoading(false)
-        router.push("/dashboard")
-      } else {
-        setError("Invalid credentials")
-        setLoading(false)
-      }
-    }, 500)
+    try {
+      await login(email, password)
+    } catch (err) {
+      console.error("[v0] Login error:", err)
+      setError("Invalid credentials. Please try again.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="text-sm text-muted-foreground mt-4">Checking authentication...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -89,12 +95,6 @@ export default function LoginPage() {
               {loading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
-
-          <div className="mt-4 text-xs text-center text-muted-foreground">
-            <p>Demo Credentials:</p>
-            <p>Email: admin@example.com</p>
-            <p>Password: password123</p>
-          </div>
         </CardContent>
       </Card>
     </div>

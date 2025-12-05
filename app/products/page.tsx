@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Pagination } from "@/components/pagination"
 import { useRouter } from "next/navigation"
 import { Search, Plus, Eye, Edit, Trash2 } from "lucide-react"
-import { API_ENDPOINTS, fetchAPI } from "@/lib/api"
+import { API_ENDPOINTS, authFetch } from "@/lib/api"
 
 interface APIProduct {
   id: string
@@ -66,7 +66,7 @@ export default function ProductsPage() {
     async function fetchProducts() {
       try {
         setLoading(true)
-        const response = await fetchAPI(API_ENDPOINTS.products)
+        const response = await authFetch(API_ENDPOINTS.products)
 
         // Handle both direct array and nested data structure
         const productsData = Array.isArray(response) ? response : response.data || response.products || []

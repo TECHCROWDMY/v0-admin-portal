@@ -3,6 +3,7 @@
 import { useRouter, usePathname } from "next/navigation"
 import { LayoutDashboard, Users, Package, LogOut, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useAuth } from "@/context/auth-context"
 
 const NAVIGATION = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -13,11 +14,10 @@ const NAVIGATION = [
 export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const router = useRouter()
   const pathname = usePathname()
+  const { logout } = useAuth()
 
   const handleLogout = () => {
-    localStorage.removeItem("admin_token")
-    localStorage.removeItem("admin_email")
-    router.push("/login")
+    logout()
   }
 
   return (
@@ -52,7 +52,7 @@ export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
                     router.push(item.href)
                     onClose()
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors cursor-pointer ${
                     isActive ? "bg-blue-600 text-white" : "text-slate-300 hover:bg-slate-800"
                   }`}
                 >
@@ -68,7 +68,7 @@ export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
             <Button
               onClick={handleLogout}
               variant="outline"
-              className="w-full justify-start text-slate-300 border-slate-700 hover:bg-slate-800 bg-transparent"
+              className="w-full justify-start text-slate-300 border-slate-700 hover:bg-slate-800 bg-transparent cursor-pointer"
             >
               <LogOut className="h-4 w-4 mr-2" />
               Logout
