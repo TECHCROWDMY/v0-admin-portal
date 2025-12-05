@@ -36,14 +36,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await fetchAPI(API_ENDPOINTS.auth, {
+      const response = await fetchAPI(API_ENDPOINTS.auth.login, {
         method: "POST",
         body: JSON.stringify({ email, password }),
       })
 
-      if (response.access_token) {
-        localStorage.setItem("accessToken", response.access_token)
-        setAccessToken(response.access_token)
+      if (response.accessToken) {
+        localStorage.setItem("accessToken", response.accessToken)
+        setAccessToken(response.accessToken)
         setIsAuthenticated(true)
         router.push("/dashboard")
       } else {
