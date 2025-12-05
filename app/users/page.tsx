@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { ProtectedLayout } from "@/components/protected-layout"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,67 +11,103 @@ import { Badge } from "@/components/ui/badge"
 import { Pagination } from "@/components/pagination"
 import { useRouter } from "next/navigation"
 import { Search, Plus, Eye, Edit, Trash2 } from "lucide-react"
+import { API_ENDPOINTS, fetchAPI } from "@/lib/api"
 
-// Mock user data
-const USERS = [
-  { id: 1, name: "John Doe", email: "john@example.com", role: "seller", status: "active", createdAt: "2024-01-15" },
-  { id: 2, name: "Jane Smith", email: "jane@example.com", role: "buyer", status: "active", createdAt: "2024-01-18" },
-  { id: 3, name: "Bob Johnson", email: "bob@example.com", role: "admin", status: "active", createdAt: "2024-01-20" },
-  {
-    id: 4,
-    name: "Alice Brown",
-    email: "alice@example.com",
-    role: "seller",
-    status: "inactive",
-    createdAt: "2024-01-22",
-  },
-  {
-    id: 5,
-    name: "Charlie Davis",
-    email: "charlie@example.com",
-    role: "buyer",
-    status: "active",
-    createdAt: "2024-01-25",
-  },
-  {
-    id: 6,
-    name: "Diana Wilson",
-    email: "diana@example.com",
-    role: "seller",
-    status: "active",
-    createdAt: "2024-01-28",
-  },
-  { id: 7, name: "Eve Martinez", email: "eve@example.com", role: "admin", status: "active", createdAt: "2024-02-01" },
-  {
-    id: 8,
-    name: "Frank Miller",
-    email: "frank@example.com",
-    role: "buyer",
-    status: "inactive",
-    createdAt: "2024-02-05",
-  },
-]
+interface APIUser {
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  role: "admin" | "seller" | "buyer"
+  isVerified: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+interface UIUser {
+  id: string
+  name: string
+  email: string
+  role: "admin" | "seller" | "buyer"
+  status: "active" | "inactive"
+  createdAt: string
+}
+
+function mapAPIUserToUI(apiUser: APIUser): UIUser {
+  return {
+    id: apiUser.id,
+    name: `${apiUser.firstName} ${apiUser.lastName}`,
+    email: apiUser.email,
+    role: apiUser.role,
+    status: apiUser.isVerified ? "active" : "inactive",
+    createdAt: new Date(apiUser.createdAt).toLocaleDateString(),
+  }
+}
 
 const ITEMS_PER_PAGE = 5
 
 export default function UsersPage() {
   const router = useRouter()
+  const [users, setUsers] = useState<UIUser[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [roleFilter, setRoleFilter] = useState<string>("all")
   const [currentPage, setCurrentPage] = useState(1)
 
+  useEffect(() => {
+    async function fetchUsers() {
+      try {
+        setLoading(true)
+        const response = await fetchAPI(API_ENDPOINTS.users)
+
+        // Handle both direct array and nested data structure
+        const usersData = Array.isArray(response) ? response : response.data || []
+        const mappedUsers = usersData.map(mapAPIUserToUI)
+        setUsers(mappedUsers)
+      } catch (err) {
+        console.error("[v0] Error fetching users:", err)
+        setError("Failed to load users. Please try again.")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUsers()
+  }, [])
+
   const filteredUsers = useMemo(() => {
-    return USERS.filter((user) => {
+    return users.filter((user) => {
       const matchesSearch =
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase())
       const matchesRole = roleFilter === "all" || user.role === roleFilter
       return matchesSearch && matchesRole
     })
-  }, [searchTerm, roleFilter])
+  }, [searchTerm, roleFilter, users])
 
   const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE)
   const paginatedUsers = filteredUsers.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
+
+  if (loading) {
+    return (
+      <ProtectedLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <p className="text-muted-foreground">Loading users...</p>
+        </div>
+      </ProtectedLayout>
+    )
+  }
+
+  if (error) {
+    return (
+      <ProtectedLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <p className="text-destructive">{error}</p>
+        </div>
+      </ProtectedLayout>
+    )
+  }
 
   return (
     <ProtectedLayout>
