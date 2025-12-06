@@ -68,7 +68,7 @@ export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
             <Button
               onClick={handleLogout}
               variant="outline"
-              className="w-full justify-start text-slate-300 border-slate-700 hover:bg-slate-800 bg-transparent cursor-pointer"
+              className="w-full justify-start text-slate-300 border-slate-700 hover:bg-slate-800 bg-transparent"
             >
               <LogOut className="h-4 w-4 mr-2" />
               Logout
